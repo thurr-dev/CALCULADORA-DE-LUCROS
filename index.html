@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Lucro e Troco</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    padding: 20px;
+  }
+  .container {
+    max-width: 420px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  h2, h3 {
+    text-align: center;
+  }
+  input, select, button {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+  }
+  button {
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #0056b3;
+  }
+  .resultado {
+    margin-top: 20px;
+    background: #e9f5e9;
+    padding: 15px;
+    border-radius: 8px;
+  }
+  .secao {
+    margin-top: 25px;
+    border-top: 2px solid #eee;
+    padding-top: 15px;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h2>💰 Calculadora de Lucro</h2>
+
+    <!-- Preço de venda ideal -->
+    <h3>Preço de venda ideal</h3>
+    <label for="custo">Custo do produto (R$):</label>
+    <input type="number" id="custo" step="0.01" placeholder="Ex: 50">
+
+    <label for="pagamento">Forma de pagamento:</label>
+    <select id="pagamento">
+      <optgroup label="Dinheiro/Pix">
+        <option value="0">Dinheiro - 0%</option>
+        <option value="0.5">Pix - 0,50%</option>
+      </optgroup>
+      <optgroup label="Débito">
+        <option value="1.94">Visa / Mastercard - 1,94%</option>
+        <option value="2.55">Outras bandeiras - 2,55%</option>
+      </optgroup>
+      <optgroup label="Crédito">
+        <option value="3.85">Visa / Mastercard - 3,85%</option>
+        <option value="4.87">Outras bandeiras - 4,87%</option>
+      </optgroup>
+    </select>
+
+    <label for="lucro">Lucro desejado:</label>
+    <select id="lucro">
+	<option value="0">0%</option>
+      <option value="5">5%</option>
+	  <option value="10">10%</option>
+	  <option value="15">15%</option>
+	  <option value="20">20%</option>
+      <option value="25">25%</option>
+	  <option value="35">35%</option>
+      <option value="50">50%</option>
+	  <option value="60">60%</option>
+	  <option value="70">70%</option>
+	  <option value="80">80%</option>
+	  <option value="90">90%</option>
+	  <option value="100">100%</option>
+    </select>
+
+    <button onclick="calcularLucro()">Calcular Preço de Venda</button>
+    <div id="resultadoLucro" class="resultado" style="display:none;"></div>
+
+    <!-- Valor por item -->
+    <div class="secao">
+      <h3>Valor de cada item no total</h3>
+      <label for="valorTotal">Valor total (R$):</label>
+      <input type="number" id="valorTotal" step="0.01" placeholder="Ex: 500">
+
+      <label for="quantidadeItens">Quantidade de itens:</label>
+      <input type="number" id="quantidadeItens" step="1" placeholder="Ex: 10">
+
+      <button onclick="calcularPorItem()">Calcular Valor por Item</button>
+      <div id="resultadoItens" class="resultado" style="display:none;"></div>
+    </div>
+
+    <!-- Cálculo de troco -->
+    <div class="secao">
+      <h3>Calcular Troco</h3>
+      <label for="valorPago">Valor pago (R$):</label>
+      <input type="number" id="valorPago" step="0.01" placeholder="Ex: 100">
+
+      <label for="valorCompra">Valor da compra (R$):</label>
+      <input type="number" id="valorCompra" step="0.01" placeholder="Ex: 87.50">
+
+      <button onclick="calcularTroco()">Calcular Troco</button>
+      <div id="resultadoTroco" class="resultado" style="display:none;"></div>
+    </div>
+  </div>
+
+<script>
+function calcularLucro() {
+  const custo = parseFloat(document.getElementById('custo').value);
+  const taxa = parseFloat(document.getElementById('pagamento').value);
+  const lucroPercent = parseFloat(document.getElementById('lucro').value);
+
+  if (isNaN(custo) || custo <= 0) {
+    alert('Digite um custo válido!');
+    return;
+  }
+
+  const precoComLucro = custo * (1 + lucroPercent / 100);
+  const precoFinal = precoComLucro / (1 - taxa / 100);
+  const valorTaxa = precoFinal * (taxa / 100);
+  const lucroReal = precoFinal - custo - valorTaxa;
+  const lucroRealPercent = (lucroReal / custo) * 100;
+
+  document.getElementById('resultadoLucro').style.display = 'block';
+  document.getElementById('resultadoLucro').innerHTML = `
+    <strong>Resultado:</strong><br>
+    💵 Preço de venda sugerido: <strong>R$ ${precoFinal.toFixed(2)}</strong><br>
+    💳 Taxa da maquininha: R$ ${valorTaxa.toFixed(2)}<br>
+    📈 Lucro líquido: R$ ${lucroReal.toFixed(2)} (${lucroRealPercent.toFixed(2)}%)
+  `;
+}
+
+function calcularPorItem() {
+  const valorTotal = parseFloat(document.getElementById('valorTotal').value);
+  const quantidade = parseInt(document.getElementById('quantidadeItens').value);
+  const taxa = parseFloat(document.getElementById('pagamento').value);
+  const lucroPercent = parseFloat(document.getElementById('lucro').value);
+
+  if (isNaN(valorTotal) || valorTotal <= 0 || isNaN(quantidade) || quantidade <= 0) {
+    alert('Digite valores válidos!');
+    return;
+  }
+
+  const valorLiquidoTotal = valorTotal * (1 - taxa / 100);
+  const valorPorItemLiquido = valorLiquidoTotal / quantidade;
+  const custoEstimadoItem = valorPorItemLiquido / (1 + lucroPercent / 100);
+
+  document.getElementById('resultadoItens').style.display = 'block';
+  document.getElementById('resultadoItens').innerHTML = `
+    <strong>Resultado:</strong><br>
+    💰 Valor total líquido: R$ ${valorLiquidoTotal.toFixed(2)}<br>
+    📦 Valor de cada item líquido: R$ ${valorPorItemLiquido.toFixed(2)}<br>
+  `;
+}
+
+function calcularTroco() {
+  const pago = parseFloat(document.getElementById('valorPago').value);
+  const compra = parseFloat(document.getElementById('valorCompra').value);
+
+  if (isNaN(pago) || isNaN(compra) || pago < compra) {
+    alert('Digite valores válidos! O valor pago deve ser maior ou igual ao valor da compra.');
+    return;
+  }
+
+  const troco = pago - compra;
+
+  document.getElementById('resultadoTroco').style.display = 'block';
+  document.getElementById('resultadoTroco').innerHTML = `
+    <strong>Troco:</strong> R$ ${troco.toFixed(2)}
+  `;
+}
+</script>
+</body>
+</html>
