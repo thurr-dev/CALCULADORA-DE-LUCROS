@@ -1,0 +1,17 @@
+{
+  "name": "Mini Adega Cálculos",
+  "short_name": "Mini Adega",
+  "description": "Calculadora de Lucro e Troco para Adega",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#121212",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/thurr-dev/CALCULADORA-DE-LUCROS/80aacb07a4448caae623683b500327e6f681b732/icone.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
