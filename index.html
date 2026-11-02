@@ -1,223 +1,428 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini Adega Cálculos</title>
-    
-    <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#121212">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="https://raw.githubusercontent.com/thurr-dev/CALCULADORA-DE-LUCROS/80aacb07a4448caae623683b500327e6f681b732/icone.png">
-
-    <style>
-        /* Modo Escuro */
-        body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #121212; /* Fundo preto azulado */
-            color: #e0e0e0;
-            padding: 20px;
-            margin: 0;
-        }
-        .container {
-            max-width: 420px;
-            margin: auto;
-            background: #1e1e1e; /* Card cinza escuro */
-            padding: 25px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        h2 {
-            text-align: center;
-            color: #ffffff;
-            margin-bottom: 20px;
-            font-size: 24px;
-        }
-        h3 {
-            text-align: center;
-            color: #00aaff; /* Azul claro */
-            font-size: 18px;
-            margin-top: 0;
-        }
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: 500;
-            font-size: 14px;
-            color: #bbb;
-        }
-        input, select {
-            width: 100%;
-            padding: 12px;
-            margin-top: 8px;
-            border-radius: 8px;
-            border: 1px solid #333;
-            background: #2c2c2c;
-            color: #fff;
-            font-size: 16px;
-            box-sizing: border-box;
-            outline: none;
-        }
-        input:focus, select:focus {
-            border-color: #00aaff;
-        }
-        button {
-            width: 100%;
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 14px;
-            margin-top: 20px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        button:hover {
-            background: #0056b3;
-        }
-        .resultado {
-            margin-top: 20px;
-            background: #1b2e1b; /* Verde bem escuro */
-            color: #81c784; /* Texto verde claro */
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 5px solid #2e7d32;
-            line-height: 1.6;
-        }
-        .secao {
-            margin-top: 30px;
-            border-top: 1px solid #333;
-            padding-top: 20px;
-        }
-        strong {
-            color: #fff;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini Adega | Calculadora</title>
+  <meta name="theme-color" content="#101a1b">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/thurr-dev/CALCULADORA-DE-LUCROS/80aacb07a4448caae623683b500327e6f681b732/icone.png">
+  <style>
+    :root {
+      --bg: #0d1516;
+      --surface: #142122;
+      --surface-2: #1b2b2c;
+      --line: #2b4141;
+      --text: #f2f7f5;
+      --muted: #a7bab5;
+      --accent: #35c69a;
+      --accent-dark: #1c9d78;
+      --blue: #65b9d6;
+      --danger: #ff7777;
+      --shadow: 0 18px 50px rgba(0,0,0,.22);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; padding: 28px 16px 48px;
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      background: radial-gradient(ellipse at 50% -15%, #1c3834 0, transparent 48%), var(--bg);
+      color: var(--text);
+    }
+    .app { width: min(100%, 760px); margin: 0 auto; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; gap:14px; margin-bottom:24px; }
+    .brand { display:flex; align-items:center; gap:12px; }
+    .logo {
+      width:48px; height:48px; display:grid; place-items:center; border-radius:15px;
+      background: linear-gradient(145deg, #2b9c7c, #17644f); font-size:24px;
+      box-shadow: 0 8px 22px rgba(35,184,139,.2);
+    }
+    h1 { margin:0; font-size:clamp(20px, 4vw, 27px); letter-spacing:-.6px; }
+    .subtitle { color:var(--muted); font-size:13px; margin-top:4px; }
+    .settings-button {
+      width:auto; margin:0; padding:11px 14px; border:1px solid var(--line);
+      background:var(--surface); color:var(--text); border-radius:12px; font-weight:700;
+    }
+    .intro { color:var(--muted); font-size:14px; margin:0 0 18px; line-height:1.5; }
+    .tabs { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:16px; }
+    .tab {
+      padding:12px 8px; border:1px solid var(--line); border-radius:12px;
+      background:rgba(20,33,34,.8); color:var(--muted); font-weight:700; cursor:pointer;
+    }
+    .tab.active { color:#06271d; background:var(--accent); border-color:var(--accent); }
+    .panel {
+      background:linear-gradient(160deg, rgba(25,43,43,.98), rgba(17,29,30,.98));
+      border:1px solid var(--line); border-radius:20px; padding:clamp(18px,4vw,28px);
+      box-shadow:var(--shadow);
+    }
+    .panel-head { margin-bottom:22px; }
+    .eyebrow { color:var(--accent); text-transform:uppercase; font-size:11px; font-weight:800; letter-spacing:1.5px; }
+    h2 { margin:7px 0 5px; font-size:22px; letter-spacing:-.4px; }
+    .help { color:var(--muted); font-size:13px; line-height:1.5; margin:0; }
+    .field { margin:17px 0; }
+    label { display:block; margin-bottom:8px; color:#d4e1dd; font-size:13px; font-weight:650; }
+    input, select {
+      width:100%; min-height:48px; padding:12px 13px; border-radius:11px;
+      border:1px solid #35504e; background:#0e1a1b; color:var(--text);
+      font:inherit; font-size:16px; outline:none;
+    }
+    input:focus, select:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(53,198,154,.12); }
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .primary, .secondary, .danger-button {
+      width:100%; min-height:49px; margin-top:12px; border:0; border-radius:12px;
+      padding:13px 16px; font-size:14px; font-weight:800; cursor:pointer; transition:.18s ease;
+    }
+    .primary { background:linear-gradient(135deg,var(--accent),#25ad85); color:#06271d; }
+    .primary:hover { filter:brightness(1.07); transform:translateY(-1px); }
+    .secondary { background:#263b3c; color:var(--text); border:1px solid #3a5553; }
+    .danger-button { background:transparent; color:var(--danger); border:1px solid #714444; }
+    .result {
+      display:none; margin-top:18px; padding:18px; border-radius:14px;
+      background:rgba(31,111,83,.17); border:1px solid rgba(53,198,154,.35);
+    }
+    .result.show { display:block; }
+    .result-label { color:#a9d8c7; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.8px; }
+    .result-main { margin:5px 0 12px; color:#70e0b7; font-size:clamp(27px,6vw,36px); font-weight:850; letter-spacing:-1px; }
+    .result-line { display:flex; justify-content:space-between; gap:14px; padding:8px 0; border-top:1px solid rgba(255,255,255,.09); color:#c5d8d2; font-size:14px; }
+    .result-line strong { color:#fff; text-align:right; }
+    .notice { min-height:20px; margin-top:12px; color:var(--danger); font-size:13px; }
+    .settings-panel { display:none; margin-top:16px; }
+    .settings-panel.show { display:block; }
+    .settings-row {
+      display:grid; grid-template-columns:minmax(0,1fr) 115px 42px; gap:9px;
+      align-items:end; padding:12px 0; border-bottom:1px solid var(--line);
+    }
+    .settings-row label { font-size:12px; }
+    .settings-row input { min-height:43px; font-size:14px; }
+    .remove {
+      min-height:43px; border:1px solid #714444; background:transparent; color:var(--danger);
+      border-radius:10px; cursor:pointer; font-size:18px;
+    }
+    .settings-actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px; }
+    .settings-actions button { margin:0; }
+    .saved-note { color:var(--muted); font-size:12px; margin:12px 0 0; line-height:1.5; }
+    .footer { text-align:center; color:#718783; font-size:11px; margin-top:22px; }
+    @media (max-width:520px) {
+      body { padding:18px 12px 34px; }
+      .topbar { align-items:flex-start; }
+      .settings-button { padding:10px 11px; font-size:12px; }
+      .tabs { gap:6px; }
+      .tab { font-size:11px; padding:11px 5px; }
+      .grid-2 { grid-template-columns:1fr; gap:0; }
+      .settings-row { grid-template-columns:minmax(0,1fr) 92px 38px; gap:6px; }
+    }
+  </style>
 </head>
 <body>
-
-<div class="container">
-    <h2>💰 Mini Adega Cálculos</h2>
-
-    <div class="secao">
-        <h3>Preço de Venda Ideal</h3>
-        <label for="custo">Custo do produto (R$):</label>
-        <input type="number" id="custo" step="0.01" placeholder="Ex: 50.00">
-
-        <label for="pagamento">Forma de pagamento:</label>
-        <select id="pagamento">
-            <optgroup label="Dinheiro/Pix">
-                <option value="0">Dinheiro - 0%</option>
-                <option value="0.5">Pix - 0,50%</option>
-            </optgroup>
-            <optgroup label="Débito">
-                <option value="2.85">Outras bandeiras - 2,85%</option>
-            </optgroup>
-            <optgroup label="Crédito">
-                <option value="5.87">Outras bandeiras - 5,87%</option>
-            </optgroup>
-        </select>
-
-        <label for="lucro">Quanto quer ganhar (Lucro %):</label>
-        <select id="lucro">
-            <option value="0">0%</option>
-            <option value="10">10%</option>
-            <option value="20">20%</option>
-            <option value="30">30%</option>
-            <option value="40">40%</option>
-            <option value="50">50%</option>
-            <option value="60">60%</option>
-            <option value="70">70%</option>
-            <option value="80">80%</option>
-            <option value="90">90%</option>
-            <option value="100">100%</option>
-        </select>
-
-        <button onclick="calcularLucro()">CALCULAR VENDA</button>
-        <div id="resultadoLucro" class="resultado" style="display:none;"></div>
+<main class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">🍃</div>
+      <div>
+        <h1>Mini Adega</h1>
+        <div class="subtitle">Calculadora de preços e vendas</div>
+      </div>
     </div>
+    <button class="settings-button" id="openSettings" type="button">⚙ Configurações</button>
+  </header>
 
-    <div class="secao">
-        <h3>Custo por Unidade</h3>
-        <label for="valorTotal">Valor total da nota/fardo (R$):</label>
-        <input type="number" id="valorTotal" step="0.01" placeholder="Ex: 120.00">
+  <p class="intro">Ferramentas rápidas para calcular preços, custos e troco no dia a dia.</p>
 
-        <label for="quantidadeItens">Quantidade de itens:</label>
-        <input type="number" id="quantidadeItens" step="1" placeholder="Ex: 12">
+  <nav class="tabs" aria-label="Calculadoras">
+    <button class="tab active" data-tab="sale" type="button">Preço de venda</button>
+    <button class="tab" data-tab="unit" type="button">Custo unitário</button>
+    <button class="tab" data-tab="change" type="button">Troco</button>
+  </nav>
 
-        <button onclick="calcularPorItem()" style="background: #6c757d;">CALCULAR UNITÁRIO</button>
-        <div id="resultadoItens" class="resultado" style="display:none;"></div>
+  <section class="panel" id="sale">
+    <div class="panel-head">
+      <div class="eyebrow">Precificação</div>
+      <h2>Preço de venda ideal</h2>
+      <p class="help">Informe o custo, a forma de pagamento e quanto deseja acrescentar sobre o custo.</p>
     </div>
-
-    <div class="secao">
-        <h3>Calculadora de Troco</h3>
-        <label for="valorPago">Valor dado pelo cliente (R$):</label>
-        <input type="number" id="valorPago" step="0.01" placeholder="Ex: 50.00">
-
-        <label for="valorCompra">Valor da compra (R$):</label>
-        <input type="number" id="valorCompra" step="0.01" placeholder="Ex: 32.50">
-
-        <button onclick="calcularTroco()" style="background: #28a745;">CALCULAR TROCO</button>
-        <div id="resultadoTroco" class="resultado" style="display:none;"></div>
+    <div class="field">
+      <label for="cost">Custo do produto (R$)</label>
+      <input id="cost" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Ex.: 50,00">
     </div>
-</div>
+    <div class="field">
+      <label for="payment">Forma de pagamento</label>
+      <select id="payment"></select>
+    </div>
+    <div class="field">
+      <label for="profit">Acréscimo desejado sobre o custo (%)</label>
+      <input id="profit" type="number" min="0" max="1000" step="0.1" value="30" inputmode="decimal">
+    </div>
+    <button class="primary" id="calculateSale" type="button">Calcular preço de venda</button>
+    <div class="notice" id="saleNotice" role="alert"></div>
+    <div class="result" id="saleResult" aria-live="polite"></div>
+  </section>
+
+  <section class="panel" id="unit" hidden>
+    <div class="panel-head">
+      <div class="eyebrow">Divisão de custo</div>
+      <h2>Custo por unidade</h2>
+      <p class="help">Descubra quanto cada produto custou dentro da nota ou do fardo.</p>
+    </div>
+    <div class="field">
+      <label for="total">Valor total da nota/fardo (R$)</label>
+      <input id="total" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Ex.: 120,00">
+    </div>
+    <div class="field">
+      <label for="quantity">Quantidade de unidades</label>
+      <input id="quantity" type="number" min="1" step="1" inputmode="numeric" placeholder="Ex.: 12">
+    </div>
+    <button class="primary" id="calculateUnit" type="button">Calcular custo unitário</button>
+    <div class="notice" id="unitNotice" role="alert"></div>
+    <div class="result" id="unitResult" aria-live="polite"></div>
+  </section>
+
+  <section class="panel" id="change" hidden>
+    <div class="panel-head">
+      <div class="eyebrow">Atendimento</div>
+      <h2>Calculadora de troco</h2>
+      <p class="help">Confira rapidamente quanto deve ser devolvido ao cliente.</p>
+    </div>
+    <div class="field">
+      <label for="paid">Valor dado pelo cliente (R$)</label>
+      <input id="paid" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Ex.: 50,00">
+    </div>
+    <div class="field">
+      <label for="purchase">Valor da compra (R$)</label>
+      <input id="purchase" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Ex.: 32,50">
+    </div>
+    <button class="primary" id="calculateChange" type="button">Calcular troco</button>
+    <div class="notice" id="changeNotice" role="alert"></div>
+    <div class="result" id="changeResult" aria-live="polite"></div>
+  </section>
+
+  <section class="panel settings-panel" id="settings">
+    <div class="panel-head">
+      <div class="eyebrow">Personalização</div>
+      <h2>Taxas de pagamento</h2>
+      <p class="help">Edite os nomes e percentuais. As alterações ficam salvas neste navegador e aparecem na calculadora de venda.</p>
+    </div>
+    <div id="feeRows"></div>
+    <button class="secondary" id="addFee" type="button">＋ Adicionar forma de pagamento</button>
+    <div class="settings-actions">
+      <button class="primary" id="saveSettings" type="button">Salvar alterações</button>
+      <button class="secondary" id="closeSettings" type="button">Voltar</button>
+    </div>
+    <button class="danger-button" id="resetSettings" type="button">Restaurar taxas originais</button>
+    <p class="saved-note" id="settingsNote">As configurações são armazenadas localmente neste navegador. Limpar os dados do navegador pode apagá-las.</p>
+  </section>
+
+  <div class="footer">Mini Adega Cálculos · Ferramenta de apoio para o dia a dia</div>
+</main>
 
 <script>
-    // Registro do Service Worker para PWA
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js').catch(err => console.log(err));
-        });
+  const DEFAULT_FEES = [
+    { name: "Dinheiro", rate: 0 },
+    { name: "Pix", rate: 0.5 },
+    { name: "Débito - Outras bandeiras", rate: 2.85 },
+    { name: "Crédito - Outras bandeiras", rate: 5.87 }
+  ];
+  const STORAGE_KEY = "miniAdegaPaymentFeesV2";
+  const money = value => new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
+  let fees = loadFees();
+
+  function loadFees() {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (!stored) return DEFAULT_FEES.map(item => ({...item}));
+      const parsed = JSON.parse(stored);
+      if (!Array.isArray(parsed) || !parsed.length) return DEFAULT_FEES.map(item => ({...item}));
+      return parsed;
+    } catch {
+      return DEFAULT_FEES.map(item => ({...item}));
     }
+  }
 
-    function calcularLucro() {
-        const custo = parseFloat(document.getElementById('custo').value);
-        const taxa = parseFloat(document.getElementById('pagamento').value);
-        const lucroPercent = parseFloat(document.getElementById('lucro').value);
+  function showResult(id, html) {
+    const box = document.getElementById(id);
+    box.innerHTML = html;
+    box.classList.add("show");
+  }
+  function clearNotice(id) { document.getElementById(id).textContent = ""; }
+  function fail(id, message) { document.getElementById(id).textContent = message; }
+  function numberFrom(id) { return Number(document.getElementById(id).value); }
 
-        if (!custo) { alert('Informe o custo!'); return; }
+  function renderPaymentOptions() {
+    const select = document.getElementById("payment");
+    const previous = select.value;
+    select.innerHTML = "";
+    fees.forEach((fee, index) => {
+      const option = document.createElement("option");
+      option.value = String(index);
+      option.textContent = `${fee.name} — ${fee.rate.toLocaleString("pt-BR", {maximumFractionDigits: 2})}%`;
+      select.appendChild(option);
+    });
+    if (fees[Number(previous)]) select.value = previous;
+  }
 
-        const precoComLucro = custo * (1 + lucroPercent / 100);
-        const precoFinal = precoComLucro / (1 - taxa / 100);
-        const valorTaxa = precoFinal * (taxa / 100);
-        const lucroReal = precoFinal - custo - valorTaxa;
+  function renderFeeRows() {
+    const host = document.getElementById("feeRows");
+    host.innerHTML = "";
+    fees.forEach((fee, index) => {
+      const row = document.createElement("div");
+      row.className = "settings-row";
+      const nameWrap = document.createElement("div");
+      const nameLabel = document.createElement("label");
+      nameLabel.textContent = "Forma de pagamento";
+      const name = document.createElement("input");
+      name.type = "text"; name.maxLength = 45; name.value = fee.name;
+      name.setAttribute("aria-label", `Nome da forma de pagamento ${index + 1}`);
+      name.dataset.nameIndex = index;
+      nameLabel.appendChild(name);
+      nameWrap.appendChild(nameLabel);
 
-        const res = document.getElementById('resultadoLucro');
-        res.style.display = 'block';
-        res.innerHTML = `
-            💵 Vender por: <strong>R$ ${precoFinal.toFixed(2)}</strong><br>
-            💳 Taxa: R$ ${valorTaxa.toFixed(2)}<br>
-            📈 Lucro Limpo: <strong>R$ ${lucroReal.toFixed(2)}</strong>
-        `;
+      const rateWrap = document.createElement("div");
+      const rateLabel = document.createElement("label");
+      rateLabel.textContent = "Taxa (%)";
+      const rate = document.createElement("input");
+      rate.type = "number"; rate.min = "0"; rate.max = "99.99"; rate.step = "0.01";
+      rate.value = fee.rate; rate.inputMode = "decimal";
+      rate.setAttribute("aria-label", `Taxa percentual ${index + 1}`);
+      rate.dataset.rateIndex = index;
+      rateLabel.appendChild(rate);
+      rateWrap.appendChild(rateLabel);
+
+      const remove = document.createElement("button");
+      remove.type = "button"; remove.className = "remove"; remove.textContent = "×";
+      remove.title = "Remover forma de pagamento";
+      remove.setAttribute("aria-label", `Remover ${fee.name}`);
+      remove.addEventListener("click", () => {
+        if (fees.length === 1) {
+          document.getElementById("settingsNote").textContent = "Mantenha pelo menos uma forma de pagamento.";
+          return;
+        }
+        fees.splice(index, 1);
+        renderFeeRows();
+      });
+      row.append(nameWrap, rateWrap, remove);
+      host.appendChild(row);
+    });
+  }
+
+  function readFeeRows() {
+    const next = [];
+    const names = [...document.querySelectorAll("[data-name-index]")];
+    const rates = [...document.querySelectorAll("[data-rate-index]")];
+    for (let i = 0; i < names.length; i++) {
+      const name = names[i].value.trim();
+      const rate = Number(rates[i].value);
+      if (!name) throw new Error("Preencha o nome de todas as formas de pagamento.");
+      if (rates[i].value === "" || !Number.isFinite(rate) || rate < 0 || rate >= 100) {
+        throw new Error("Informe taxas entre 0% e 99,99%.");
+      }
+      next.push({ name, rate });
     }
+    if (!next.length) throw new Error("Adicione pelo menos uma forma de pagamento.");
+    return next;
+  }
 
-    function calcularPorItem() {
-        const total = parseFloat(document.getElementById('valorTotal').value);
-        const qtd = parseInt(document.getElementById('quantidadeItens').value);
-
-        if (!total || !qtd) { alert('Informe valores válidos!'); return; }
-
-        const unitario = total / qtd;
-        const res = document.getElementById('resultadoItens');
-        res.style.display = 'block';
-        res.innerHTML = `📦 Custo unitário: <strong>R$ ${unitario.toFixed(2)}</strong>`;
+  document.getElementById("openSettings").addEventListener("click", () => {
+    document.querySelectorAll("main > section.panel").forEach(section => section.hidden = true);
+    document.getElementById("settings").classList.add("show");
+    renderFeeRows();
+  });
+  document.getElementById("closeSettings").addEventListener("click", () => {
+    document.getElementById("settings").classList.remove("show");
+    document.getElementById("sale").hidden = false;
+    document.querySelector('.tab[data-tab="sale"]').classList.add("active");
+  });
+  document.getElementById("addFee").addEventListener("click", () => {
+    try { fees = readFeeRows(); } catch (error) {
+      document.getElementById("settingsNote").textContent = error.message; return;
     }
-
-    function calcularTroco() {
-        const pago = parseFloat(document.getElementById('valorPago').value);
-        const compra = parseFloat(document.getElementById('valorCompra').value);
-
-        if (pago < compra) { alert('Valor pago é insuficiente!'); return; }
-
-        const troco = pago - compra;
-        const res = document.getElementById('resultadoTroco');
-        res.style.display = 'block';
-        res.innerHTML = `💰 Troco: <strong>R$ ${troco.toFixed(2)}</strong>`;
+    fees.push({ name: "Nova forma de pagamento", rate: 0 });
+    renderFeeRows();
+  });
+  document.getElementById("saveSettings").addEventListener("click", () => {
+    try {
+      fees = readFeeRows();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(fees));
+      renderPaymentOptions();
+      document.getElementById("settingsNote").textContent = "✓ Alterações salvas neste navegador.";
+    } catch (error) {
+      document.getElementById("settingsNote").textContent = error.message;
     }
+  });
+  document.getElementById("resetSettings").addEventListener("click", () => {
+    if (!confirm("Restaurar as taxas originais?")) return;
+    fees = DEFAULT_FEES.map(item => ({...item}));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(fees));
+    renderFeeRows();
+    renderPaymentOptions();
+    document.getElementById("settingsNote").textContent = "Taxas originais restauradas.";
+  });
+
+  document.querySelectorAll(".tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      document.getElementById("settings").classList.remove("show");
+      document.querySelectorAll(".tab").forEach(item => item.classList.toggle("active", item === tab));
+      ["sale", "unit", "change"].forEach(id => document.getElementById(id).hidden = id !== tab.dataset.tab);
+    });
+  });
+
+  document.getElementById("calculateSale").addEventListener("click", () => {
+    clearNotice("saleNotice");
+    const cost = numberFrom("cost");
+    const profit = numberFrom("profit");
+    const selectedFee = fees[Number(document.getElementById("payment").value)];
+    if (!Number.isFinite(cost) || cost <= 0) return fail("saleNotice", "Informe um custo maior que zero.");
+    if (!Number.isFinite(profit) || profit < 0 || profit > 1000) return fail("saleNotice", "Informe um acréscimo entre 0% e 1.000%.");
+    if (!selectedFee || selectedFee.rate < 0 || selectedFee.rate >= 100) return fail("saleNotice", "Confira a taxa da forma de pagamento.");
+    const feeRate = selectedFee.rate / 100;
+    const sellingPrice = cost * (1 + profit / 100) / (1 - feeRate);
+    const feeValue = sellingPrice * feeRate;
+    const netProfit = sellingPrice - cost - feeValue;
+    showResult("saleResult", `
+      <div class="result-label">Preço sugerido de venda</div>
+      <div class="result-main">${money(sellingPrice)}</div>
+      <div class="result-line"><span>Taxa (${selectedFee.rate.toLocaleString("pt-BR")}%)</span><strong>${money(feeValue)}</strong></div>
+      <div class="result-line"><span>Lucro líquido estimado</span><strong>${money(netProfit)}</strong></div>
+      <div class="result-line"><span>Custo do produto</span><strong>${money(cost)}</strong></div>
+    `);
+  });
+
+  document.getElementById("calculateUnit").addEventListener("click", () => {
+    clearNotice("unitNotice");
+    const total = numberFrom("total");
+    const quantity = numberFrom("quantity");
+    if (!Number.isFinite(total) || total <= 0) return fail("unitNotice", "Informe um valor total maior que zero.");
+    if (!Number.isInteger(quantity) || quantity <= 0) return fail("unitNotice", "Informe uma quantidade inteira maior que zero.");
+    showResult("unitResult", `
+      <div class="result-label">Custo por unidade</div>
+      <div class="result-main">${money(total / quantity)}</div>
+      <div class="result-line"><span>Valor total</span><strong>${money(total)}</strong></div>
+      <div class="result-line"><span>Quantidade</span><strong>${quantity}</strong></div>
+    `);
+  });
+
+  document.getElementById("calculateChange").addEventListener("click", () => {
+    clearNotice("changeNotice");
+    const paid = numberFrom("paid");
+    const purchase = numberFrom("purchase");
+    if (!Number.isFinite(paid) || paid < 0 || !Number.isFinite(purchase) || purchase < 0) {
+      return fail("changeNotice", "Informe valores válidos para o pagamento e a compra.");
+    }
+    if (paid < purchase) return fail("changeNotice", `Faltam ${money(purchase - paid)} para completar o pagamento.`);
+    showResult("changeResult", `
+      <div class="result-label">Troco a devolver</div>
+      <div class="result-main">${money(paid - purchase)}</div>
+      <div class="result-line"><span>Valor recebido</span><strong>${money(paid)}</strong></div>
+      <div class="result-line"><span>Valor da compra</span><strong>${money(purchase)}</strong></div>
+    `);
+  });
+
+  renderPaymentOptions();
+
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("sw.js").catch(error => console.log("Service Worker:", error));
+    });
+  }
 </script>
-
 </body>
 </html>
